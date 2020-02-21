@@ -5,7 +5,7 @@
 
 namespace App\Entity;
 
-use App\Controller\TestezController;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -29,8 +29,6 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=191, unique=true)
      * @Assert\NotBlank()
-     * @Assert\Regex(
-     *     pattern     = "/^((\+|00)33\s?)[67](\s?\d{2}){4}$/")
      */
     private $username;
 
@@ -56,32 +54,11 @@ class User implements UserInterface
      */
     private $password;
 
-     /**
-     * @ORM\Column(name="date_crea", type="datetime")
-     * @Assert\DateTime()
-     */
-    private $date_crea;
-
-    /**
+      /**
      * @ORM\Column(type="array")
      */
     private $roles = [];
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Adhesion", cascade={"persist","remove"})
-     */
-    private $adhesion;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $date_signat;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $signature;
-
+    
     /**
      *  @return mixed
      */
@@ -89,15 +66,10 @@ class User implements UserInterface
     {
         return $this->id;
     }
-    
     public function __construct()
     {
-        
         $this->roles = array('ROLE_SYMPATHISANT');
-        $this->date_crea = new \Datetime();
-
     }
-
     // other properties and methods
 
 
@@ -144,92 +116,24 @@ class User implements UserInterface
         return null;
     }
 
-
-    public function getRoles(): array   {
-        $roles = $this->roles;    
-        $roles[] = '';
-  return array_unique($roles); 
-    }
-
     public function eraseCredentials()
     {
     }
+
+    public function getRoles(): array   {
+        $roles = $this->roles;
+        $roles[] = '';
+        return array_unique($roles);
+    }
+  public function setRoles(array $roles): self
+  {
+      $this->roles = $roles;
+
+      return $this;
+  }
     
-    /** 
-    * @var blob|null
-    */
-    public function getAdhesion()
-    {
-        return $this->adhesion;
-    }
 
-    public function setAdhesion($adhesion)
-    {
-        $this->adhesion = $adhesion;
-
-        return $this;
-    }
-
-    public function setDateCrea(\DATETIME $dateCrea)
-    {
-        $this->date_crea = $dateCrea;
-
-        return $this;
-    }
-
-    /**
-     * Get dateCrea
-     *
-     * @return \DATETIME
-     */
-    public function getDateCrea()
-    {
-        return $this->date_crea;
-    }
-
-    /**
-    * toString
-    * @return string
-    */
-    public function __toString(){
-        return $this->getUsername();
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * Get dateCrea
-     *
-     * @return \DATETIME
-     */
-    public function getDateSignat(): ?\DateTimeInterface
-    {
-        return $this->date_signat;
-    }
-
-    public function setDateSignat(?\DateTimeInterface $dateSignat): self
-    {
-        $this->date_signat = $dateSignat;
-
-        return $this;
-    }
-
-    public function getSignature(): ?string
-    {
-        return $this->signature;
-    }
-
-    public function setSignature(string $signature): self
-    {
-        $this->signature = $signature;
-
-        return $this;
-    }
+ 
 
     }
   
