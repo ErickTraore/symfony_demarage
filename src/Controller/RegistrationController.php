@@ -19,6 +19,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class RegistrationController extends AbstractController
 {
     /**
+     * @Route("/", name="home")
+     */
+    public function index()
+    {
+        return $this->render('home/index.html.twig');
+    }
+    /**
      * @Route("/register", name="app_register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
@@ -41,7 +48,7 @@ class RegistrationController extends AbstractController
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('/');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -49,7 +56,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-        /**
+    /**
      * @Route("/login", name = "login")
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
@@ -66,7 +73,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="app_logout", methods={"GET"})
+     * @Route("/logout", name = "logout", methods={"GET"})
      */
     public function logout()
     {
